@@ -1,4 +1,4 @@
-function [requiredImpedancesBelow, requiredImpedancesAbove, frequencies] = generate_required_impedance_curve(frequencies, totalSpacing, varargin)
+function [requiredAdmittancesBelow, requiredAdmittancesAbove, frequencies] = generate_required_impedance_curve(frequencies, totalSpacing, varargin)
 %GENERATE_REQUIRED_IMPEDANCE_CURVE Vector of required impedance values.
 %
 % generate_required_impedance_curve(frequencies, totalSpacing) generates a
@@ -33,8 +33,8 @@ validPoints = @(x) isnumeric(x) && isscalar(x) && x == fix(x);
 validSubstrate = @(x) isnumeric(x) && isscalar(x) && x >= 1;
 validHeights = @(x) isnumeric(x) && isscalar(x) && x > 0;
 addOptional(p, 'enablePlot', 1, validPlotFlag);
-addOptional(p, 'minYn', -10, validBounds);
-addOptional(p, 'maxYn', 10, validBounds);
+addOptional(p, 'minYn', -5, validBounds);
+addOptional(p, 'maxYn', 5, validBounds);
 addOptional(p, 'numPoints', 1000, validPoints);
 addOptional(p, 'substrateBackingEps', 3.55, validSubstrate);
 addOptional(p, 'substrateBackingHeight', 0.508, validHeights);
@@ -52,10 +52,8 @@ yns = linspace(p.Results.minYn, p.Results.maxYn, numPoints);
 
 % Scale fruencies
 freqs = frequencies * 1e9;
-bestYsBelow = zeros(size(freqs));
-bestZsBelow = zeros(size(freqs));
-bestYsAbove = zeros(size(freqs));
-bestZsAbove = zeros(size(freqs));
+bestYnsBelow = zeros(size(freqs));
+bestYnsAbove = zeros(size(freqs));
 S21s = zeros(numel(freqs), numPoints);
 eps_r = p.Results.substrateBackingEps;
 
@@ -102,40 +100,47 @@ for i = 1:numel(bdsAir)
         C = ABCD(2,1);
         D = ABCD(2,2);
         S21 = 2 / (A + B/Z0 + C * Z0 + D);
-        %S21s(i, point) = 20 * log10(abs(S21));
-        S21s(i, point) = abs(S21);
+        S21s(i, point) = 20 * log10(abs(S21));
     end
     S21SingleFreq = S21s(i, :);
     below = S21SingleFreq(yns < 0);
     above = S21SingleFreq(~(yns < 0));
     [~, idxBelow] = max(below);
-    bestYsBelow(i) = yns(idxBelow);
-    bestZsBelow(i) = -1 ./ (bestYsBelow(i) / 377);
+    bestYnsBelow(i) = yns(idxBelow);
     [~, idxAbove] = max(above);
-    bestYsAbove(i) = yns(idxAbove + numel(below));
-    bestZsAbove(i) = -1 ./ (bestYsAbove(i) / 377);
+    bestYnsAbove(i) = yns(idxAbove + numel(below));
 end
 
 %% Plot the surfaces and ideal impedances.
 if enablePlot
     figure('Name', 'Tansmission vs Layer');
-    subplot(2, 1, 1)
+    subplot(1, 2, 1)
     hold on
-    [Y, F] = meshgrid(yns, frequencies);
-    S21s(S21s < 0.9) = 0;
-    h = surf(Y, F, S21s);
+    [F, Y] = meshgrid(frequencies, yns);
+    S21sTransmit90 = S21s;
+    S21sTransmit90(S21sTransmit90 < -1) = NaN;
+    S21sTransmit90(S21sTransmit90 >= -1) = -3;
+    h = surf(F, Y, S21sTransmit90');
     set(h, 'FaceColor', [0.5 0.5 0.5], 'EdgeColor', 'none');
-    zlim([0.1, 1])
-    %colormap('jet')
-    %view(3);
-    subplot(2, 1, 2)
-    hold on
-    plot(frequencies, bestZsBelow);
-    plot(frequencies, bestZsAbove);
+
+    S21sTransmit99 = S21s;
+    S21sTransmit99(S21sTransmit99 < -0.01) = NaN;
+    S21sTransmit99(S21sTransmit99 >= -0.01) = -2;
+    j = surf(F, Y, S21sTransmit99');
+    set(j, 'FaceColor', [0, 0, 0], 'EdgeColor', 'none');
+
+    S21sTransmit01 = S21s;
+    S21sTransmit01(S21sTransmit01 >= -10) = NaN;
+    S21sTransmit01(S21sTransmit01 < -10) = -1;
+    k = surf(F, Y, S21sTransmit01');
+    set(k, 'FaceColor', [1, 0, 0], 'EdgeColor', 'none');
+    title("Spacing = " + totalSpacing + " mm");
+
+    single_layer_network_with_impedance;
 end
 
-requiredImpedancesBelow = bestZsBelow;
-requiredImpedancesAbove = bestZsAbove;
+requiredAdmittancesBelow = bestYnsBelow;
+requiredAdmittancesAbove = bestYnsAbove;
 
 end
 
