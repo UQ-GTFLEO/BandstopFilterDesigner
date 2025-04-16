@@ -41,7 +41,7 @@ addOptional(p, 'substrateBackingHeight', 0.508, validHeights);
 parse(p, varargin{:});
 
 if ~isscalar(totalSpacing) || ~(totalSpacing > 0)
-    error("The value of 'spacing' is invalid. It must satisfy the function: @(x)~isscalar(x)||~(x > 0).");
+    error("The value of 'totalSpacing' is invalid. It must satisfy the function: @(x)~isscalar(x)||~(x > 0).");
 end
 
 enablePlot = p.Results.enablePlot;
