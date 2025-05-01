@@ -15,7 +15,7 @@ function [requiredAdmittancesBelow, requiredAdmittancesAbove, frequencies] = gen
 % 0.508mm thick with a dielectric constant of 3.55.
 %
 % Example usage:
-%   frequencies = [5:0.1:15];
+%   frequencies = [0:0.1:40];
 %   totalSpacing = 2;
 %   generate_required_impedance_curve(frequencies, ...
 %       totalSpacing, ...

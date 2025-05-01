@@ -1,12 +1,38 @@
 function [maxTransmissionYn] = single_frequency_heatmap(frequency, totalSpacing, varargin)
-%SINGLE_FREQUENCY_HEATMAP Summary of this function goes here
-%   Detailed explanation goes here
+%SINGLE_FREQUENCY_HEATMAP Returns the admittance that leads to maximum
+%transmission
+%
+% single_frequency_heatmap(frequency, totalSpacing) generates a heatmap of
+% the admittances for the two layers with the colouring as the transmission
+% magnitude and returns the positions of maximum transmission
+%
+% By default, plots are generated to represent transmission and of the
+% Plotts can be disabled with hese can be disabled with 
+% generate_required_impedance_curve(frequencies, totalSpacing, 'enablePlot'
+% 0).
+%
+% All FSSs are assumed to have a substrate backing.  By defult this is
+% 0.508mm thick with a dielectric constant of 3.55.
+%
+% Example usage:
+%   frequency = 20;
+%   totalSpacing = 2;
+%   single_frequency_heatmap(frequency, ...
+%       totalSpacing, ...
+%       'enablePlot', 1, ...
+%       'minYn', -10, ...
+%       'maxYn', 10, ...
+%       'numPoints', 1000, ...
+%       'substrateBackingEps', 3.55, ...
+%       'substrateBackingHeight', 0.508);
 
 p = inputParser;
+validPlotFlag = @(x) isnumeric(x) && isscalar(x) && (x == 0 || x == 1);
 validBounds = @(x) isnumeric(x) && isscalar(x);
 validPoints = @(x) isnumeric(x) && isscalar(x) && x == fix(x);
 validSubstrate = @(x) isnumeric(x) && isscalar(x) && x >= 1;
 validHeights = @(x) isnumeric(x) && isscalar(x) && x > 0;
+addOptional(p, 'enablePlot', 1, validPlotFlag);
 addOptional(p, 'minYn', -10, validBounds);
 addOptional(p, 'maxYn', 10, validBounds);
 addOptional(p, 'numPoints', 1000, validPoints);
@@ -24,6 +50,7 @@ end
 
 numPoints = p.Results.numPoints;
 yns = linspace(p.Results.minYn, p.Results.maxYn, numPoints);
+enablePlot = p.Results.enablePlot;
 
 
 %% Define constants
@@ -74,15 +101,16 @@ for row = 1:numPoints
     end
 end
 
-imagesc(yns, yns, S21s)
-set(gca,'YDir','normal')
-xlabel("Y1");
-ylabel("Y2");
-colorbar
-colormap('jet')
-axis square
-set(gca,"FontSize",30)
-
+if enablePlot
+    imagesc(yns, yns, S21s)
+    set(gca,'YDir','normal')
+    xlabel("Y1");
+    ylabel("Y2");
+    colorbar
+    colormap('jet')
+    axis square
+    set(gca,"FontSize",30)
+end
 
 % Get the exact maximums
 sz = [numPoints numPoints];
