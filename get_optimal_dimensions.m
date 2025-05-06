@@ -1,17 +1,20 @@
+function [wm, wp] = get_optimal_dimensions()
+%UNTITLED Summary of this function goes here
+%   Detailed explanation goes here
+
 indexat = @(expr, index) expr(index);
 FreqMin = 0;
 FreqMax = 40;
 eps_r = 3.55;
 angMax = FreqMax * 2 * pi;
-[LSym, C1Sym, C2Sym] = get_symbolic_impedances(0.9);
+[LSym, C1Sym, C2Sym] = get_symbolic_impedances(1);
 
 w_mesh = 4e-3;
 w_patch = 3.2e-3;
 
 period = 5;
 scale_factor = period / 10;
-ratio = 0.35;
-dielectric_factor = (eps_r * ratio) + 1 * (1 - ratio);
+dielectric_factor = eps_r * 0.4 + 1 * (1 - 0.5);
 
 C1 = dielectric_factor * scale_factor * C1Sym(w_patch);
 L = scale_factor * LSym(w_patch, w_mesh);
@@ -40,10 +43,10 @@ Yn_plot = @(f) imag(1 / Z(f)) * Z0;
 fplot(Yn_plot, [FreqMin, FreqMax], 'b', 'LineWidth', 2);
 ylim([-5, 5]);
 xline(1e-9 / (2 * pi * sqrt(L * (C1 + C2))));
-%xline(22.5, 'LineWidth',2);
+xline(22.5, 'LineWidth',2);
 
 subplot(1, 2, 2)
-sParams = sparameters("NO_SUB_one_layer.s4p");
+sParams = sparameters("rogers4003c_one_layer_for_sub_weight.s4p");
 fplot(S21, [FreqMin, FreqMax], 'b', 'LineWidth', 2);
 hold on 
 ylim([-60, 0])
@@ -52,3 +55,5 @@ xlim([0 FreqMax])
 plot_s_params = rfplot(sParams, 1, 3);
 set(plot_s_params, 'Color', 'black', 'LineWidth', 2)
 
+
+end
