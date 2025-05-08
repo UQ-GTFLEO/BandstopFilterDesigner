@@ -114,7 +114,7 @@ end
 %% Plot the surfaces and ideal impedances.
 if enablePlot
     figure('Name', 'Tansmission vs Layer');
-    subplot(1, 2, 1)
+    %subplot(1, 2, 1)
     hold on
     [F, Y] = meshgrid(frequencies, yns);
     S21sTransmit90 = S21s;
@@ -137,6 +137,10 @@ if enablePlot
     title("Spacing = " + totalSpacing + " mm");
 
     single_layer_network_with_impedance;
+    xlabel("Frequency (GHz)")
+    ylabel("Normalised Admittance")
+    set(gca,"FontSize",20)
+    axis square
 end
 
 requiredAdmittancesBelow = bestYnsBelow;

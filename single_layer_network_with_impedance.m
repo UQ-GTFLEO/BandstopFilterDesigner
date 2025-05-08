@@ -34,7 +34,7 @@ S11 = @(f) 20 * log10(abs((A + B/Z0 - C(f) * Z0 - D) / (A + B/Z0 + C(f) * Z0 + D
 S21 = @(f) 20 * log10(abs(2 / (A + B/Z0 + C(f) * Z0 + D)));
 
 
-subplot(1, 2, 1)
+%subplot(1, 2, 1)
 hold on
 Yn_plot = @(f) imag(1 / Z(f)) * Z0;
 fplot(Yn_plot, [FreqMin, FreqMax], 'b', 'LineWidth', 2);
@@ -42,13 +42,13 @@ ylim([-5, 5]);
 xline(1e-9 / (2 * pi * sqrt(L * (C1 + C2))));
 %xline(22.5, 'LineWidth',2);
 
-subplot(1, 2, 2)
-sParams = sparameters("NO_SUB_one_layer.s4p");
-fplot(S21, [FreqMin, FreqMax], 'b', 'LineWidth', 2);
-hold on 
-ylim([-60, 0])
-xline(1e-9 / (2 * pi * sqrt(L * (C1 + C2))));
-xlim([0 FreqMax])
-plot_s_params = rfplot(sParams, 1, 3);
-set(plot_s_params, 'Color', 'black', 'LineWidth', 2)
+% subplot(1, 2, 2)
+% sParams = sparameters("NO_SUB_one_layer.s4p");
+% fplot(S21, [FreqMin, FreqMax], 'b', 'LineWidth', 2);
+% hold on 
+% ylim([-60, 0])
+% xline(1e-9 / (2 * pi * sqrt(L * (C1 + C2))));
+% xlim([0 FreqMax])
+% plot_s_params = rfplot(sParams, 1, 3);
+% set(plot_s_params, 'Color', 'black', 'LineWidth', 2)
 

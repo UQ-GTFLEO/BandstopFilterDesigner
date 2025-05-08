@@ -58,6 +58,7 @@ enablePlot = p.Results.enablePlot;
 % Scale fruencies
 freq = frequency * 1e9;
 S21s = zeros(numPoints, numPoints);
+S21s_flat = zeros(1, numPoints);
 eps_r = p.Results.substrateBackingEps;
 
 
@@ -101,15 +102,40 @@ for row = 1:numPoints
     end
 end
 
+for idx = 1:numPoints
+       
+        Ys = (yns(idx) * 1i) / Z0;
+
+        ABCD_Y = [1, 0; Ys, 1];
+        ABCD_TL_AIR = [cos(bdAir), 1i * Zd * sin(bdAir); 1i * sin(bdAir)/Zd, cos(bdAir)];
+        ABCD_TL_SUB = [cos(bdSub), 1i * Zd * sin(bdSub); 1i * sin(bdSub)/Zd, cos(bdSub)];
+        ABCD = ABCD_Y * ABCD_TL_SUB * ABCD_TL_AIR * ABCD_TL_SUB * ABCD_Y;
+
+        A = ABCD(1,1);
+        B = ABCD(1,2);
+        C = ABCD(2,1);
+        D = ABCD(2,2);
+        S21 = 2 / (A + B/Z0 + C * Z0 + D);
+        S21s_flat(idx) = 20 * log10(abs(S21));
+end
+
+
 if enablePlot
+    figure
     imagesc(yns, yns, S21s)
     set(gca,'YDir','normal')
-    xlabel("Y1");
-    ylabel("Y2");
+    xlabel("Normalised Admittance 1");
+    ylabel("Normalised Admittance 2");
     colorbar
     colormap('jet')
     axis square
     set(gca,"FontSize",30)
+    figure
+    plot(yns, S21s_flat, "b", "LineWidth",2)
+    set(gca,"FontSize",30)
+    xlabel("Normalised Admittance");
+    ylabel("Transmission (dB)");
+    axis square
 end
 
 % Get the exact maximums
