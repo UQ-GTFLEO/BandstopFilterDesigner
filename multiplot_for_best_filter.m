@@ -1,6 +1,14 @@
-%function [eps_r] = get_exact_eps_r()
-%UNTITLED2 Summary of this function goes here
-%   Detailed explanation goes here
+w_meshes    = [ones(1, 24) * 2.5, ones(1, 19) * 2, ones(1, 14) * 1.5, ones(1, 9), ones(1, 4) * 0.5];
+w_patches   = [linspace(0.1, 2.4, 24), linspace(0.1, 1.9, 19), linspace(0.1, 1.4, 14), linspace(0.1, 0.9, 9), linspace(0.1, 0.4, 4)];
+
+%w_patches    = [ones(1, 20) * 0.5, ones(1, 15), ones(1, 10) * 1.5, ones(1, 5) * 2];
+%w_meshes   = [linspace(0.6, 2.5, 20), linspace(1.1, 2.5, 15), linspace(1.6, 2.5, 10), linspace(2.1, 2.5, 5)];
+
+
+figure;
+
+
+for idx = 1:70
 
 indexat = @(expr, index) expr(index);
 FreqMin = 0;
@@ -9,11 +17,14 @@ eps_r_layer = 3.55;
 angMax = FreqMax * 2 * pi;
 [LSym, C1Sym, C2Sym] = get_symbolic_impedances(1);
 
-w_mesh = 4e-3;
-w_patch = 3.2e-3;
-
 period = 5;
 scale_factor = period / 10;
+w_m = w_meshes(idx) * 1e-3;
+w_p = w_patches(idx) * 1e-3;
+
+w_mesh = w_m / scale_factor;
+w_patch = w_p / scale_factor;
+
 ratio = 0.35;
 dielectric_factor = (eps_r_layer * ratio) + 1 * (1 - ratio);
 
@@ -53,12 +64,15 @@ B = @(f) indexat(ABCD(f), 3);
 C = @(f) indexat(ABCD(f), 2);
 D = @(f) indexat(ABCD(f), 4);
 
-S21 = @(f) 20 * log10(abs(2 / (A(f) + B(f)/Z0 + C(f) * Z0 + D(f))));
+%S21 = @(f) 20 * log10(abs(2 / (A(f) + B(f)/Z0 + C(f) * Z0 + D(f))));
+S21 = @(f) (abs(2 / (A(f) + B(f)/Z0 + C(f) * Z0 + D(f))));
 
-figure;
-hold on;
-fplot(S21, [FreqMin, FreqMax], 'r', 'LineWidth', 2)
-sParams = sparameters("HeightComparison/rogers4003c_0508_6.s4p");
-plot_s = rfplot(sParams, 1, 3);
-set(plot_s, 'Color', 'black', 'LineWidth', 2)
+subplot(10, 7, idx);
+fplot(S21, [FreqMin, FreqMax], 'b', 'LineWidth', 2)
 xlim([FreqMin FreqMax])
+yline(0.9)
+title("w_{m} = " + w_meshes(idx) + ", w_{p} = " + w_patches(idx))
+
+
+end
+

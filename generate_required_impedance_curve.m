@@ -60,7 +60,7 @@ eps_r = p.Results.substrateBackingEps;
 
 % Scale spacing
 dSub = p.Results.substrateBackingHeight * 1e-3;
-dAir = totalSpacing * 1e-3 - dSub;
+dAir = totalSpacing * 1e-3 - (dSub * 2);
 
 % Base Case Air
 lambdaAir = physconst('LightSpeed') ./ freqs;

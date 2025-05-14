@@ -1,3 +1,5 @@
+function [] = add_dim_plot(w_m, w_p, period)
+
 indexat = @(expr, index) expr(index);
 FreqMin = 0;
 FreqMax = 40;
@@ -5,11 +7,14 @@ eps_r = 3.55;
 angMax = FreqMax * 2 * pi;
 [LSym, C1Sym, C2Sym] = get_symbolic_impedances(0.9);
 
-w_mesh = 4.4e-3;
-w_patch = 4e-3;
+%w_mesh = 4e-3;
+%w_patch = 3.2e-3;
 
-period = 5;
+%period = 5;
 scale_factor = period / 10;
+w_mesh = w_m / scale_factor;
+w_patch = w_p / scale_factor;
+
 ratio = 0.35;
 dielectric_factor = (eps_r * ratio) + 1 * (1 - ratio);
 
@@ -52,3 +57,4 @@ xline(1e-9 / (2 * pi * sqrt(L * (C1 + C2))));
 % plot_s_params = rfplot(sParams, 1, 3);
 % set(plot_s_params, 'Color', 'black', 'LineWidth', 2)
 
+end
