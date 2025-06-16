@@ -57,7 +57,6 @@ bestYnsAbove = zeros(size(freqs));
 S21s = zeros(numel(freqs), numPoints);
 eps_r = p.Results.substrateBackingEps;
 
-
 % Scale spacing
 dSub = p.Results.substrateBackingHeight * 1e-3;
 dAir = totalSpacing * 1e-3 - (dSub * 2);
