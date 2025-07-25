@@ -25,7 +25,6 @@ C_data = C_restricted * 10^15;
 initial_guess = [1, 1, 0, 0];
 [params, ~] = lsqcurvefit(g, initial_guess, w_restricted, C_data, [], []);
 
-
 p1Start = [3.7e-3, 27.15e9];
 p1End = [0.4e-3, 24.65e9];
 i = 53;
