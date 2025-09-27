@@ -81,7 +81,7 @@ for i = 1:numel(bdsAir)
     bdAir = bdsAir(i);
     bdSub = bdsSub(i);
 
-    for point = 1:numPoints
+    for point = 1:numPoi nts
         % FSS layer Admittance
         Ys = (yns(point) * 1i) / Z0;
         ABCD_Y = [1, 0; Ys, 1];
