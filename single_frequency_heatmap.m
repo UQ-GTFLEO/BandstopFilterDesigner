@@ -20,8 +20,8 @@ function [maxTransmissionYn] = single_frequency_heatmap(frequency, totalSpacing,
 %   single_frequency_heatmap(frequency, ...
 %       totalSpacing, ...
 %       'enablePlot', 1, ...
-%       'minYn', -10, ...
-%       'maxYn', 10, ...
+%       'minYn', -5, ...
+%       'maxYn', 5, ...
 %       'numPoints', 1000, ...
 %       'substrateBackingEps', 3.55, ...
 %       'substrateBackingHeight', 0.508);
@@ -124,18 +124,19 @@ if enablePlot
     figure
     imagesc(yns, yns, S21s)
     set(gca,'YDir','normal')
-    xlabel("Normalised Admittance 1");
-    ylabel("Normalised Admittance 2");
+    xlabel("Normalized Admittance 1");
+    ylabel("Normalized Admittance 2");
     colorbar
     colormap('jet')
     axis square
-    set(gca,"FontSize",30)
+    set(gca,"FontSize",48)
     figure
     plot(yns, S21s_flat, "b", "LineWidth",2)
-    set(gca,"FontSize",30)
-    xlabel("Normalised Admittance");
+    set(gca,"FontSize",48)
+    xlabel("Normalized Admittance");
     ylabel("Transmission (dB)");
     axis square
+    ylim([-20, 0])
 end
 
 % Get the exact maximums
