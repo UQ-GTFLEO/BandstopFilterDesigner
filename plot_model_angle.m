@@ -13,9 +13,18 @@ scale_factor = period / 10;
 ratio = 0.4;
 dielectric_factor = (eps_r * ratio) + 1 * (1 - ratio);
 
+for TE = [1 0]
+figure;
+hold on;
+
+for angdeg = [0 15 30 45]
+angg = angdeg * pi / 180;
+distCorrect = 1 ./ cos(angg);
+
 % Scale spacing
-dSub = 0.508 * 1e-3;
-dAir = 3.2 * 1e-3 - (dSub * 2);
+dSub = 0.508 * 1e-3 .* distCorrect;
+dAir = (3.2 * 1e-3 - (dSub * 2)) * distCorrect;
+
 
 % Base Case Air
 lambdaAir = @(f) physconst('LightSpeed') ./ f;
@@ -37,9 +46,26 @@ ABCD_TL_air = @(f) [cos(bdAir(f)), 1i * Z0 * sin(bdAir(f)); 1i * sin(bdAir(f))/Z
 % Substrate TL
 ABCD_TL_sub = @(f) [cos(bdSub(f)), 1i * Zd * sin(bdSub(f)); 1i * sin(bdSub(f))/Zd, cos(bdSub(f))];
 
+
+
+
+
+k = 377;
+keff = 377 * dielectric_factor;
+angle_factor = 1 - (k./keff).^2 .* sin(angg).^2 ./ 2;
+
+
 C1 = dielectric_factor * scale_factor * C1Sym(w_patch);
 L = scale_factor * LSym(w_patch, w_mesh);
 C2 = dielectric_factor * scale_factor * C2Sym(w_patch, w_mesh);
+
+if TE
+    C1 = C1 .* angle_factor;
+    C2 = C2 .* angle_factor;
+else
+    L = L .* angle_factor;
+end
+
 
 Z_C1 = @(f) 1 / (1i * 2 * pi * f * C1);
 Z_C2 = @(f) 1 / (1i * 2 * pi * f * C2);
@@ -65,7 +91,9 @@ D = @(f) indexat(ABCD(f), 4);
 S11 = @(f) 20 * log10(abs((A(f) + B(f)/Z0 - C(f) * Z0 - D(f)) / (A(f) + B(f)/Z0 + C(f) * Z0 + D(f))));
 S21 = @(f) 20 * log10(abs(2 / (A(f) + B(f)/Z0 + C(f) * Z0 + D(f))));
 
-fplot(S21, [0, FreqMax], 'Color', 'blue', 'LineWidth', 2, 'DisplayName', 'Model');
+fplot(S21, [0, FreqMax],'LineWidth', 2, 'DisplayName', 'Model', 'DisplayName', int2str(angdeg));
 
-
-
+end
+ylim([-40, 0])
+legend
+end
