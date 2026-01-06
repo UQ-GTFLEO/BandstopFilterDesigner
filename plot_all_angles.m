@@ -37,7 +37,7 @@ db = @(x) 20 * log10(abs(x));
 
 hold on;
 plot_on_top_angle;
-plot(inline_Freq, inline_S21, '--', 'Color', 'black', 'LineWidth', 2, 'DisplayName', '0° Measured')
+plot(inline_Freq, inline_S21, '-.', 'Color', 'black', 'LineWidth', 2, 'DisplayName', '0° Measured')
 data = rfparam(sParams,1,3);
 plot(sParams.Frequencies / 10^9, db(data), "-", "Color", 'black', 'LineWidth', 2, 'DisplayName', '0° Simulated');
 grid;
@@ -55,20 +55,20 @@ legend;
 figure;
 hold on;
 
-%plot(inline_Freq, inline_S21, '--', 'Color', 'black', 'LineWidth', 2, 'DisplayName', '0° Measured')
+plot(inline_Freq, inline_S21, '-.', 'Color', 'black', 'LineWidth', 2, 'DisplayName', '0° Measured')
 data = rfparam(sParams,1,3);
 plot(sParams.Frequencies / 10^9, db(data), "-", "Color", 'black', 'LineWidth', 2, 'DisplayName', '0° Simulated');
 
-%plot(horz_15_Freq, horz_15_S21, '--', 'Color', 'blue', 'LineWidth', 2, 'DisplayName', '15° Measured')
+plot(horz_15_Freq, horz_15_S21, '-.', 'Color', 'blue', 'LineWidth', 2, 'DisplayName', '15° Measured')
 data = rfparam(sParams_15,1,3);
 plot(sParams_15.Frequencies / 10^9, db(data), "-", "Color", 'blue', 'LineWidth', 2, 'DisplayName', '15° Simulated');
 
 
-%plot(horz_30_Freq, horz_30_S21, '--', 'Color', 'red', 'LineWidth', 2, 'DisplayName', '30° Measured')
+plot(horz_30_Freq, horz_30_S21, '-.', 'Color', 'red', 'LineWidth', 2, 'DisplayName', '30° Measured')
 data = rfparam(sParams_30,1,3);
 plot(sParams_30.Frequencies / 10^9, db(data), "-", "Color", 'red', 'LineWidth', 2, 'DisplayName', '30° Simulated');
 
-%plot(horz_45_Freq, horz_45_S21, '--', 'Color', 'green', 'LineWidth', 2, 'DisplayName', '45° Measured')
+plot(horz_45_Freq, horz_45_S21, '-.', 'Color', 'green', 'LineWidth', 2, 'DisplayName', '45° Measured')
 data = rfparam(sParams_45,1,3);
 plot(sParams_45.Frequencies / 10^9, db(data), "-", "Color", 'green', 'LineWidth', 2, 'DisplayName', '45° Simulated');
 
@@ -87,22 +87,21 @@ ylim([-80 0])
 figure;
 hold on;
 
-hold on;
-%plot(inline_Freq, inline_S21, '--', 'Color', 'black', 'LineWidth', 2, 'DisplayName', '0° Measured')
+plot(inline_Freq, inline_S21, '-.', 'Color', 'black', 'LineWidth', 2, 'DisplayName', '0° Measured')
 data = rfparam(sParams,2,4);
 plot(sParams.Frequencies / 10^9, db(data), "-", "Color", 'black', 'LineWidth', 2, 'DisplayName', '0° Simulated');
 
 
-%plot(vert_15_Freq, vert_15_S21, '--', 'Color', 'blue', 'LineWidth', 2, 'DisplayName','15° Measured')
+plot(vert_15_Freq, vert_15_S21, '-.', 'Color', 'blue', 'LineWidth', 2, 'DisplayName','15° Measured')
 data = rfparam(sParams_15,2,4);
 plot(sParams_15.Frequencies / 10^9, db(data), "-", "Color", 'blue', 'LineWidth', 2, 'DisplayName', '15° Simulated');
 
 
-%plot(vert_30_Freq, vert_30_S21, '--', 'Color', 'red', 'LineWidth', 2, 'DisplayName', '30° Measured')
+plot(vert_30_Freq, vert_30_S21, '-.', 'Color', 'red', 'LineWidth', 2, 'DisplayName', '30° Measured')
 data = rfparam(sParams_30,2,4);
 plot(sParams_30.Frequencies / 10^9, db(data), "-", "Color", 'red', 'LineWidth', 2, 'DisplayName', '30° Simulated');
 
-%plot(vert_45_Freq, vert_45_S21, '--', 'Color', 'green', 'LineWidth', 2, 'DisplayName', '45° Measured')
+plot(vert_45_Freq, vert_45_S21, '-.', 'Color', 'green', 'LineWidth', 2, 'DisplayName', '45° Measured')
 data = rfparam(sParams_45,2,4);
 plot(sParams_45.Frequencies / 10^9, db(data), "-", "Color", 'green', 'LineWidth', 2, 'DisplayName', '45° Simulated');
 

@@ -94,6 +94,6 @@ S21 = @(f) 20 * log10(abs(2 / (A(f) + B(f)/Z0 + C(f) * Z0 + D(f))));
 fplot(S21, [0, FreqMax],'LineWidth', 2, 'DisplayName', 'Model', 'DisplayName', int2str(angdeg));
 
 end
-ylim([-40, 0])
+ylim([-80, 0])
 legend
 end

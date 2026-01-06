@@ -23,7 +23,7 @@ f = @(x) -alpha * log(sin(pi * (D - x) / (2 * D))) * 10^15;
 g = @(params, x) params(1)* f(params(2) * x + params(3)) + params(4);
 C_data = C_restricted * 10^15;
 initial_guess = [1, 1, 0, 0];
-[params, ~] = lsqcurvefit(g, initial_guess, w_restricted, C_data, [], [])
+[params, ~] = lsqcurvefit(g, initial_guess, w_restricted, C_data, [], []);
 
 p1Start = [3.7e-3, 27.15e9];
 p1End = [0.4e-3, 24.65e9];
