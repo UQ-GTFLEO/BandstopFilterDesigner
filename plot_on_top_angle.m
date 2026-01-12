@@ -10,7 +10,7 @@ w_patch = 4e-3;
 
 period = 5;
 scale_factor = period / 10;
-ratio = 0.4;
+ratio = 0.35;
 dielectric_factor = (eps_r * ratio) + 1 * (1 - ratio);
 
 % Scale spacing
